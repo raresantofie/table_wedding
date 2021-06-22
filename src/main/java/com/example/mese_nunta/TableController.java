@@ -16,10 +16,6 @@ public class TableController {
         return tableRepository.findAll();
     }
 
-    @GetMapping("/{id}")
-    public List<Table> findAllByTableId(@PathVariable Long tableId) {
-        return tableRepository.findAllByTableNumber(tableId);
-    }
 
     @GetMapping("/search")
     public List<Table> findAllByName(@RequestParam("name") String name){
