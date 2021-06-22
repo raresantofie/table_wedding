@@ -9,7 +9,6 @@ import java.util.List;
 public interface TableRepository extends JpaRepository<Table, Long> {
 
     List<Table> findAllByNameContains(String contains);
-    Table create(Table t);
     List<Table> findAllByTableNumber(Long tableNumber);
 
 
