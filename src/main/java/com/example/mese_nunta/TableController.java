@@ -30,14 +30,14 @@ public class TableController {
     }
 
     @PutMapping()
-    public Table update(@RequestBody Long id) {
-        Optional<Table> table = tableRepository.findById(id);
+    public Table update(@RequestBody TableUpdateDto tableUpdateDto) {
+        Optional<Table> table = tableRepository.findById(tableUpdateDto.getId());
         if (table.isPresent()) {
             Table t = table.get();
-            t.setChecked(true);
+            t.setChecked(tableUpdateDto.isChecked());
             tableRepository.save(t);
         }
-        return tableRepository.findById(id).get();
+        return tableRepository.findById(tableUpdateDto.getId()).get();
     }
 
 }
