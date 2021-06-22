@@ -19,7 +19,7 @@ public class TableController {
 
     @GetMapping("/search")
     public List<Table> findAllByName(@RequestParam("name") String name){
-        return tableRepository.findAllByNameContains(name);
+        return tableRepository.findAllByNameContainsIgnoreCase(name);
     }
 
     @PostMapping()

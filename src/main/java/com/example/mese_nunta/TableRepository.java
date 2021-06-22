@@ -8,7 +8,7 @@ import java.util.List;
 @Repository
 public interface TableRepository extends JpaRepository<Table, Long> {
 
-    List<Table> findAllByNameContains(String contains);
+    List<Table> findAllByNameContainsIgnoreCase(String contains);
     List<Table> findAllByTableNumber(Long tableNumber);
 
 
