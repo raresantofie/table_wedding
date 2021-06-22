@@ -4,8 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.websocket.server.PathParam;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @RestController
 public class TableController {
@@ -14,8 +13,8 @@ public class TableController {
     TableRepository tableRepository;
 
     @GetMapping("/all")
-    public List<Table> findAll() {
-        return tableRepository.findAll();
+    public List<AggregatedTableDto> findAll() {
+        return getAggregatedTables();
     }
 
 
@@ -38,6 +37,31 @@ public class TableController {
             tableRepository.save(t);
         }
         return tableRepository.findById(tableUpdateDto.getId()).get();
+    }
+
+    public List<AggregatedTableDto> getAggregatedTables() {
+        List<Table> tableList = tableRepository.findAll();
+        Map<Long, List<Table>> tableMap = new HashMap<>();
+        for (Table t: tableList) {
+            if (tableMap.containsKey(t.getId())) {
+                List<Table> tableList1 = tableMap.get(t.getId());
+                tableList1.add(t);
+                tableMap.put(t.getId(), tableList1);
+            } else {
+                List<Table> tableList1 = new ArrayList<>();
+                tableList1.add(t);
+                tableMap.put(t.getId(), tableList1);
+            }
+        }
+
+        List<AggregatedTableDto> aggregatedTableDtos = new ArrayList<>();
+        tableMap.forEach((k,v) -> {
+            AggregatedTableDto aggregatedTableDto = new AggregatedTableDto();
+            aggregatedTableDto.setId(k);
+            aggregatedTableDto.setTableList(v);
+            aggregatedTableDtos.add(aggregatedTableDto);
+        });
+        return aggregatedTableDtos;
     }
 
 }
