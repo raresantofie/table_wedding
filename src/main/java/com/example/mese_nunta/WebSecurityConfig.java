@@ -10,7 +10,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 public class WebSecurityConfig{
     @Bean
     public WebMvcConfigurer corsConfigurer() {
-        return new WebMvcConfigurerAdapter() {
+        return new WebMvcConfigurer () {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
