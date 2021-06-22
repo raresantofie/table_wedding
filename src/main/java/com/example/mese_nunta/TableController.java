@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.websocket.server.PathParam;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @RestController
 public class TableController {
@@ -14,7 +15,7 @@ public class TableController {
 
     @GetMapping("/all")
     public List<AggregatedTableDto> findAll() {
-        return getAggregatedTables();
+        return getAggregatedTables().stream().sorted(Comparator.comparing(AggregatedTableDto::getId)).collect(Collectors.toList());
     }
 
 
