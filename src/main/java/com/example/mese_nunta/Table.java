@@ -15,14 +15,14 @@ public class Table {
     @Column
     private String name;
 
-    private int tableNumber;
+    private Long tableNumber;
 
     private boolean checked;
 
     public Table() {
     }
 
-    public Table(Long id, String name, int tableNumber, boolean checked) {
+    public Table(Long id, String name, Long tableNumber, boolean checked) {
         this.id = id;
         this.name = name;
         this.tableNumber = tableNumber;
@@ -45,11 +45,11 @@ public class Table {
         this.name = name;
     }
 
-    public int getTableNumber() {
+    public Long getTableNumber() {
         return tableNumber;
     }
 
-    public void setTableNumber(int tableNumber) {
+    public void setTableNumber(Long tableNumber) {
         this.tableNumber = tableNumber;
     }
 

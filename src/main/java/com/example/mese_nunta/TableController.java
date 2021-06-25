@@ -13,8 +13,20 @@ public class TableController {
     @Autowired
     TableRepository tableRepository;
 
+    @GetMapping("/count")
+    public Metrics getCount() {
+        List<Table> tableList = tableRepository.findAll();
+        double checkedListCount = tableList.stream().filter(Table::isChecked).count();
+        Metrics metrics = new Metrics();
+        metrics.setTotalInvites(tableList.size());
+        metrics.setTotalArrived(Double.valueOf(checkedListCount).intValue());
+        metrics.setToArrive(tableList.size() - Double.valueOf(checkedListCount).intValue());
+        return metrics;
+    }
+
     @GetMapping("/all")
     public List<AggregatedTableDto> findAll() {
+
         return getAggregatedTables().stream().sorted(Comparator.comparing(AggregatedTableDto::getId)).collect(Collectors.toList());
     }
 
@@ -44,14 +56,14 @@ public class TableController {
         List<Table> tableList = tableRepository.findAll();
         Map<Long, List<Table>> tableMap = new HashMap<>();
         for (Table t: tableList) {
-            if (tableMap.containsKey(t.getId())) {
-                List<Table> tableList1 = tableMap.get(t.getId());
+            if (tableMap.containsKey(t.getTableNumber())) {
+                List<Table> tableList1 = tableMap.get(t.getTableNumber());
                 tableList1.add(t);
-                tableMap.put(t.getId(), tableList1);
+                tableMap.put(t.getTableNumber(), tableList1);
             } else {
                 List<Table> tableList1 = new ArrayList<>();
                 tableList1.add(t);
-                tableMap.put(t.getId(), tableList1);
+                tableMap.put(t.getTableNumber(), tableList1);
             }
         }
 
