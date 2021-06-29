@@ -4,6 +4,9 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Date;
 
 @Entity(name = "table_distribution")
 public class Table {
@@ -18,6 +21,9 @@ public class Table {
     private Long tableNumber;
 
     private boolean checked;
+
+    @Column
+    private LocalDateTime localDateTime;
 
     public Table() {
     }
@@ -59,5 +65,13 @@ public class Table {
 
     public void setChecked(boolean checked) {
         this.checked = checked;
+    }
+
+    public LocalDateTime getLocalDateTime() {
+        return localDateTime;
+    }
+
+    public void setLocalDateTime(LocalDateTime localDateTime) {
+        this.localDateTime = localDateTime;
     }
 }

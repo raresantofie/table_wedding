@@ -3,8 +3,9 @@ package com.example.mese_nunta;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.websocket.server.PathParam;
+import java.time.LocalDateTime;
 import java.util.*;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @RestController
@@ -27,7 +28,12 @@ public class TableController {
     @GetMapping("/all")
     public List<AggregatedTableDto> findAll() {
 
-        return getAggregatedTables().stream().sorted(Comparator.comparing(AggregatedTableDto::getId)).collect(Collectors.toList());
+        return getAggregatedTables(x -> true).stream().sorted(Comparator.comparing(AggregatedTableDto::getId)).collect(Collectors.toList());
+    }
+
+    @GetMapping("/not-arrived")
+    public List<AggregatedTableDto> findAllToArrive() {
+        return getAggregatedTables(x -> !x.isChecked()).stream().sorted(Comparator.comparing(AggregatedTableDto::getId)).collect(Collectors.toList());
     }
 
 
@@ -46,14 +52,25 @@ public class TableController {
         Optional<Table> table = tableRepository.findById(tableUpdateDto.getId());
         if (table.isPresent()) {
             Table t = table.get();
+            if (tableUpdateDto.isChecked()) {
+                t.setLocalDateTime(LocalDateTime.now());
+            } else {
+                t.setLocalDateTime(null);
+            }
             t.setChecked(tableUpdateDto.isChecked());
             tableRepository.save(t);
         }
         return tableRepository.findById(tableUpdateDto.getId()).get();
     }
 
-    public List<AggregatedTableDto> getAggregatedTables() {
-        List<Table> tableList = tableRepository.findAll();
+    public List<AggregatedTableDto> getAggregatedTables(Predicate<Table> predicate) {
+        List<Table> tableList =
+                tableRepository
+                        .findAll()
+                        .stream()
+                        .filter(predicate)
+                        .collect(Collectors.toList());
+
         Map<Long, List<Table>> tableMap = new HashMap<>();
         for (Table t: tableList) {
             if (tableMap.containsKey(t.getTableNumber())) {
